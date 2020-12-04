@@ -6,6 +6,8 @@ class Lightning{
   ArrayList<Vec> candidateSites = new ArrayList<Vec>();
   ArrayList<Float> potentials = new ArrayList<Float>();
   ArrayList<Float> phis = new ArrayList<Float>();
+  ArrayList<Boolean> chargesDrawn = new ArrayList<Boolean>();
+  ArrayList<Boolean> candidatesDrawn = new ArrayList<Boolean>();
   int iteration;
   float eta;
   float h = 1;//physical length of a grid cell
@@ -54,9 +56,11 @@ class Lightning{
       float x = potentials.get(i);
       phiMin = min(phiMin, x);
       phiMax = max(phiMax, x);
-      if(potentials.get(index) < x)index = i;
+      Vec p = candidateSites.get(i);
+      if(-width/2 < p.x && p.x < width/2 && -height/2 < p.y && p.y < height/2 && potentials.get(index) < x)index = i;
     }
     resize(phis, potentials.size());
+    
     for(int i=0; i<potentials.size(); i++){
       float x = potentials.get(i);
       phis.set(i, pow((x - phiMin)/(phiMax - phiMin), eta));
@@ -64,7 +68,8 @@ class Lightning{
     float rnd = random(1);
     for(int i=0; i<phis.size(); i++){
       float x = phis.get(i);
-      if(x > rnd && x < phis.get(index))index = i;
+      Vec p = candidateSites.get(i);
+      if(-width/2 < p.x && p.x < width/2 && -height/2 < p.y && p.y < height/2 && x > rnd && x < phis.get(index))index = i;
     }
     potentials.remove(index);
     Vec charge = candidateSites.remove(index);

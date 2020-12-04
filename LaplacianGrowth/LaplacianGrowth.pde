@@ -6,10 +6,21 @@ int iter = 10;
 
 void setup(){
   size(1000, 1000);
+  //fullScreen();
+  colorMode(HSB, 360, 100, 100);
+  reset();
+}
+
+void reset(){
+  background(0);
+  lightning = new Lightning();
   lightning.eta = eta;
   lightning.h = h;
-  lightning.start(new Vec(0, 0));
-  colorMode(HSB, 360, 100, 100);
+  lightning.start(new Vec(mouseX-width/2, mouseY-height/2));
+}
+
+void keyPressed(){
+  if(key == 'r')reset();
 }
   
 void draw(){
@@ -19,7 +30,6 @@ void draw(){
   //eta = map(mouseX, 0, width, 0.1, 5);
   //lightning.eta = eta;
   //                     /\
-  background(360);
   for(int i=0; i<iter; i++){
     lightning.grow();
   }
@@ -28,14 +38,23 @@ void draw(){
   //println(lightning.phis.size(), lightning.potentials.size(), lightning.charges.size(), lightning.candidateSites.size());
   fill(360);
   float size = 1;//grid visualization size
+  resize(lightning.chargesDrawn, lightning.charges.size());
   for(int i=0; i<lightning.charges.size(); i++){
-    Vec charge = lightning.charges.get(i);
-    rect(charge.x*size, charge.y*size, size, size);
+    if(lightning.chargesDrawn.get(i) == null){
+      Vec charge = lightning.charges.get(i);
+      rect(charge.x*size, charge.y*size, size, size);
+      lightning.chargesDrawn.set(i, true);
+    }
   }
+  resize(lightning.candidatesDrawn, lightning.candidateSites.size());
   for(int i=0; i<lightning.candidateSites.size(); i++){
-    Vec charge = lightning.candidateSites.get(i);
-    //fill(lightning.potentials.get(i), lightning.phis.get(i), 0);
-    fill(i < lightning.phis.size() ? lightning.phis.get(i)*360 : 0, 100, 100);//cramp index 
-    rect(charge.x*size, charge.y*size, size, size);
+    if(lightning.candidatesDrawn.get(i) == null){
+      Vec charge = lightning.candidateSites.get(i);
+      //fill(lightning.potentials.get(i), lightning.phis.get(i), 0);
+      //fill(i < lightning.phis.size() ? lightning.phis.get(i)*360 : 0, 100, 100);//cramp index 
+      fill(i < lightning.phis.size() ? lightning.phis.get(i)*360 : 0);//cramp index 
+      rect(charge.x*size, charge.y*size, size, size);
+      lightning.candidatesDrawn.set(i, true); 
+    }
   }
 }

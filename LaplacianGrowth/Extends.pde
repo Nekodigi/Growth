@@ -5,9 +5,9 @@ boolean contains(ArrayList<Vec> targets, Vec value){//compare internal value
   return false;
 }
 
-void resize(ArrayList<Float> target, int length){
+void resize(ArrayList target, int length){
   while(target.size() < length){
-    target.add(0.);
+    target.add(null);
   }
   int i = target.size()-1;
   while(target.size() > length){
